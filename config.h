@@ -1,6 +1,7 @@
 //
 // Created by zHd4 on 31.07.2020.
 //
+
 #include <cstdint>
 
 #ifndef WALLCSS_CONFIG_H

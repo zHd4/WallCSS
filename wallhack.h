@@ -1,8 +1,10 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 //
 // Created by zHd4 on 31.07.2020.
 //
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+
 #include <cstdint>
 #include <windows.h>
 #include <tlhelp32.h>
