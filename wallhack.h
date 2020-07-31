@@ -4,6 +4,7 @@
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
 
 #include <cstdint>
 #include <windows.h>
@@ -94,6 +95,4 @@ public:
     }
 };
 
-#endif //WALLCSS_WALLHACK_H
-
-#pragma clang diagnostic pop
+#endif

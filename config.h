@@ -19,4 +19,4 @@ public:
     uintptr_t offset = 0x3B0C9C;
 };
 
-#endif //WALLCSS_CONFIG_H
+#endif
