@@ -1,3 +1,6 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
+
 //
 // Created by zHd4 on 31.07.2020.
 //
@@ -6,9 +9,11 @@
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 #pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
 
+#include "config.h"
 #include <cstdint>
 #include <windows.h>
 #include <tlhelp32.h>
+#include <iostream>
 
 #ifndef WALLCSS_WALLHACK_H
 #define WALLCSS_WALLHACK_H
@@ -23,6 +28,19 @@ private:
     HANDLE processHandle;
 
     uintptr_t whPtr;
+
+    void init(Config config) {
+        handleWindow = FindWindowA(nullptr, config.window);
+        GetWindowThreadProcessId(handleWindow, &pid);
+
+        processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
+        uintptr_t clientBase = getModuleBaseAddress(pid, config.clientLib);
+        whPtr = clientBase + config.offset;
+    }
+
+    void changeDrawMode(int mode) {
+        WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
+    }
 
     uintptr_t getModuleBaseAddress(DWORD dwProcID, char* szModuleName)
     {
@@ -52,24 +70,21 @@ private:
         return moduleBaseAddress;
     }
 
-    void changeDrawMode(int mode) {
-        WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
-    }
-
 public:
-    Wallhack(char* window, char* clientLib, uintptr_t offset) {
-        handleWindow = FindWindowA(nullptr, window);
-        GetWindowThreadProcessId(handleWindow, &pid);
-
-        processHandle = OpenProcess(PROCESS_VM_READ, FALSE, pid);
-        uintptr_t clientBase = getModuleBaseAddress(pid, clientLib);
-        whPtr = clientBase + offset;
+    explicit Wallhack(Config config) {
+        init(config);
     }
 
-    bool isAvailable() {
+    bool isAvailable(Config config) {
         try {
+            init(config);
             isActive();
-            return true;
+
+            if(handleWindow != nullptr){
+                return true;
+            }
+
+            return false;
         } catch (...) {
             return false;
         }
@@ -77,6 +92,7 @@ public:
 
     bool isActive() {
         int drawMode = 1;
+
         ReadProcessMemory(processHandle, (void*) whPtr, &drawMode, sizeof(drawMode), nullptr);
 
         if(drawMode == 2) {

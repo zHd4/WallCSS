@@ -3,4 +3,4 @@ project(WallCSS)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(WallCSS main.cpp config.h wallhack.h)
+add_executable(WallCSS main.cpp config.h wallhack.h ui.h)

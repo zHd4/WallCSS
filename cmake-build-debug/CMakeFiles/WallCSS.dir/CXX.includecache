@@ -6,7 +6,29 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/yevhe/CLionProjects/WallCSS/config.h
+cstdint
+-
+
 C:/Users/yevhe/CLionProjects/WallCSS/main.cpp
+config.h
+C:/Users/yevhe/CLionProjects/WallCSS/config.h
+wallhack.h
+C:/Users/yevhe/CLionProjects/WallCSS/wallhack.h
+iostream
+-
+string
+-
+
+C:/Users/yevhe/CLionProjects/WallCSS/wallhack.h
+config.h
+C:/Users/yevhe/CLionProjects/WallCSS/config.h
+cstdint
+-
+windows.h
+-
+tlhelp32.h
+-
 iostream
 -
 

@@ -88,6 +88,9 @@
 		<Unit filename="C:/Users/yevhe/CLionProjects/WallCSS/main.cpp">
 			<Option target="WallCSS"/>
 		</Unit>
+		<Unit filename="C:/Users/yevhe/CLionProjects/WallCSS/ui.h">
+			<Option target="WallCSS"/>
+		</Unit>
 		<Unit filename="C:/Users/yevhe/CLionProjects/WallCSS/wallhack.h">
 			<Option target="WallCSS"/>
 		</Unit>

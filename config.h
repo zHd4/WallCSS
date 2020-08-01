@@ -12,10 +12,10 @@
 
 class Config {
 public:
-    // Absolute offset is 0x243B0C9C
     char* window = "Counter-Strike Source";
     char* clientLib = "client.dll";
 
+    // Absolute offset is 0x243B0C9C
     uintptr_t offset = 0x3B0C9C;
 };
 
