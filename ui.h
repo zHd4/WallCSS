@@ -33,16 +33,14 @@ private:
         return false;
     }
 
-    void printExit() {
-        cout << "Exiting\n";
-    }
-
-    void printActivateText() {
+    bool activationMessage() {
         cout << "To activate wallhack press enter, to exit press \"" << exitCommand << "\" ";
+        return !ifExit();
     }
 
-    void printDeactivateText() {
+    bool deactivationMessage() {
         cout << "To deactivate wallhack press enter, to exit press \"" << exitCommand << "\" ";
+        return !ifExit();
     }
 
 public:
@@ -51,7 +49,11 @@ public:
         this->wallhack = wallhack;
     }
 
-    void processUI() {
+    void printExit() {
+        cout << "Exiting\n";
+    }
+
+    void console() {
         cout << "Waiting for \"" << config.window << "\" ...\n";
 
         while (!wallhack.isAvailable(config));
@@ -60,24 +62,18 @@ public:
 
         while (wallhack.isAvailable(config)) {
             try {
-                if (!wallhack.isActive()) {
-                    printActivateText();
-
-                    if (ifExit()) {
-                        printExit();
-                        return;
-                    }
-
-                    wallhack.enable();
-                } else {
-                    printDeactivateText();
-
-                    if (ifExit()) {
-                        printExit();
+                if (wallhack.isActive()) {
+                    if(!deactivationMessage()) {
                         return;
                     }
 
                     wallhack.disable();
+                } else {
+                    if(!activationMessage()) {
+                        return;
+                    }
+
+                    wallhack.enable();
                 }
             } catch (const std::exception &e) {
                 cout << e.what();

@@ -27,6 +27,7 @@ private:
     HWND handleWindow;
     HANDLE processHandle;
 
+    int state;
     uintptr_t whPtr;
 
     void init(Config config) {
@@ -36,6 +37,12 @@ private:
         processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
         uintptr_t clientBase = getModuleBaseAddress(pid, config.clientLib);
         whPtr = clientBase + config.offset;
+
+        setState();
+    }
+
+    void setState() {
+        ReadProcessMemory(processHandle, (void*) whPtr, &state, sizeof(state), nullptr);
     }
 
     void changeDrawMode(int mode) {
@@ -90,12 +97,8 @@ public:
         }
     }
 
-    bool isActive() {
-        int drawMode = 1;
-
-        ReadProcessMemory(processHandle, (void*) whPtr, &drawMode, sizeof(drawMode), nullptr);
-
-        if(drawMode == 2) {
+    bool isActive() const {
+        if(state == 2) {
             return true;
         }
 
@@ -103,11 +106,13 @@ public:
     }
 
     void enable() {
-        changeDrawMode(ENABLE_WALLHACK);
+        state = ENABLE_WALLHACK;
+        changeDrawMode(state);
     }
 
     void disable() {
-        changeDrawMode(DISABLE_WALLHACK);
+        state = DISABLE_WALLHACK;
+        changeDrawMode(state);
     }
 };
 

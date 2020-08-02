@@ -5,9 +5,11 @@
 int main() {
     Config config;
     Wallhack wallhack(config);
+
     UI ui(config, wallhack);
 
-    ui.processUI();
+    ui.console();
+    ui.printExit();
 
     return 0;
 }
