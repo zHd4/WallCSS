@@ -7,9 +7,7 @@ int main() {
     Wallhack wallhack(config);
 
     UI ui(config, wallhack);
-
     ui.console();
-    ui.printExit();
 
     return 0;
 }
