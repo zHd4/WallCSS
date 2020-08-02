@@ -20,7 +20,7 @@ private:
     Config config;
     Wallhack wallhack;
 
-    char *exitCommand = "q";
+    char* exitCommand = "q";
 
     bool ifExit() {
         string command;

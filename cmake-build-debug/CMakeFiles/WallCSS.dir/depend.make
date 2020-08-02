@@ -3,5 +3,6 @@
 
 CMakeFiles/WallCSS.dir/main.cpp.obj: ../config.h
 CMakeFiles/WallCSS.dir/main.cpp.obj: ../main.cpp
+CMakeFiles/WallCSS.dir/main.cpp.obj: ../ui.h
 CMakeFiles/WallCSS.dir/main.cpp.obj: ../wallhack.h
 
