@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/WallCSS.dir/main.cpp.obj"
+  "CMakeFiles/WallCSS.dir/ui.cpp.obj"
   "WallCSS.exe"
   "WallCSS.exe.manifest"
   "WallCSS.pdb"

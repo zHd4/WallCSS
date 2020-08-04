@@ -1,13 +1,11 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
-
 //
 // Created by zHd4 on 31.07.2020.
 //
 
 #pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 
 #include "config.h"
 #include <cstdint>
@@ -20,6 +18,8 @@
 
 #define ENABLE_WALLHACK 2
 #define DISABLE_WALLHACK 1
+
+using namespace std;
 
 class Wallhack {
 private:
@@ -45,11 +45,12 @@ private:
         ReadProcessMemory(processHandle, (void*) whPtr, &state, sizeof(state), nullptr);
     }
 
-    void changeDrawMode(int mode) {
+    void changeDrawMode(int mode, int* stateVar) {
+        *stateVar = mode;
         WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
     }
 
-    uintptr_t getModuleBaseAddress(DWORD dwProcID, char* szModuleName)
+    uintptr_t getModuleBaseAddress(DWORD dwProcID, char * szModuleName)
     {
         uintptr_t moduleBaseAddress = 0;
         HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, dwProcID);
@@ -106,13 +107,11 @@ public:
     }
 
     void enable() {
-        state = ENABLE_WALLHACK;
-        changeDrawMode(state);
+        changeDrawMode(ENABLE_WALLHACK, &state);
     }
 
     void disable() {
-        state = DISABLE_WALLHACK;
-        changeDrawMode(state);
+        changeDrawMode(DISABLE_WALLHACK, &state);
     }
 };
 

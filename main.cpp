@@ -1,4 +1,4 @@
-#include "ui.h"
+#include "ui.cpp"
 #include "config.h"
 #include "wallhack.h"
 
@@ -6,8 +6,7 @@ int main() {
     Config config;
     Wallhack wallhack(config);
 
-    UI ui(config, wallhack);
-    ui.console();
+    console(config, wallhack);
 
     return 0;
 }
