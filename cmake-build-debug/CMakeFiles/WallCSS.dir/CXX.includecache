@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 C:/Users/yevhe/CLionProjects/WallCSS/config.h
+string
+-
 cstdint
 -
 Windows.h
@@ -29,10 +31,14 @@ iostream
 -
 string
 -
+utility
+-
 
 C:/Users/yevhe/CLionProjects/WallCSS/wallhack.h
 config.h
 C:/Users/yevhe/CLionProjects/WallCSS/config.h
+string
+-
 cstdint
 -
 windows.h

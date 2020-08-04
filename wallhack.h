@@ -8,6 +8,7 @@
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 
 #include "config.h"
+#include <string>
 #include <cstdint>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -30,12 +31,12 @@ private:
     int state;
     uintptr_t whPtr;
 
-    void init(Config config) {
-        handleWindow = FindWindowA(nullptr, config.window);
+    void init(const Config &config) {
+        handleWindow = FindWindowA(nullptr, config.window.c_str());
         GetWindowThreadProcessId(handleWindow, &pid);
 
         processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
-        uintptr_t clientBase = getModuleBaseAddress(pid, config.clientLib);
+        uintptr_t clientBase = getModuleBaseAddress(pid, const_cast<char *>(config.clientLib.c_str()));
         whPtr = clientBase + config.offset;
 
         setState();
@@ -50,7 +51,7 @@ private:
         WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
     }
 
-    uintptr_t getModuleBaseAddress(DWORD dwProcID, char * szModuleName)
+    uintptr_t getModuleBaseAddress(DWORD dwProcID, char* szModuleName)
     {
         uintptr_t moduleBaseAddress = 0;
         HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, dwProcID);
@@ -79,11 +80,11 @@ private:
     }
 
 public:
-    explicit Wallhack(Config config) {
+    explicit Wallhack(const Config &config) {
         init(config);
     }
 
-    bool isAvailable(Config config) {
+    bool isAvailable(const Config &config) {
         try {
             init(config);
             isActive();
