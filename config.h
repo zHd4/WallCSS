@@ -23,8 +23,11 @@ public:
     // Absolute offset is 0x243B0C9C
     uintptr_t offset = 0x3B0C9C;
 
-    DWORD toggleKey = VK_INSERT;
-    string toggleKeyName = "INSERT";
+    DWORD toggleWallhackKey = VK_INSERT;
+    DWORD toggleFlashingKey = VK_HOME;
+
+    string toggleWallhackKeyName = "INSERT";
+    string toggleFlashingKeyName = "HOME";
 };
 
 #endif

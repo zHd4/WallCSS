@@ -24,6 +24,34 @@ private:
     Config config;
     Wallhack wallhack;
 
+    bool isKeyPressed(DWORD key) {
+        return GetKeyState(key) & KEY_PRESSED;
+    }
+
+    void main() {
+        while (wallhack.isAvailable(config)) {
+            try {
+                if(isKeyPressed(config.toggleWallhackKey)) {
+                    wallhack.toggle();
+                }
+
+                if(isKeyPressed(config.toggleFlashingKey)) {
+                    wallhack.toggleFlashing();
+                }
+
+                if(wallhack.isFlashing()) {
+                    wallhack.toggle();
+                    Sleep(30);
+                }
+            } catch (const std::exception &e) {
+                cout << e.what();
+                break;
+            }
+
+            Sleep(70);
+        }
+    }
+
 public:
     UI(Config config, Wallhack wallhack) : wallhack(wallhack) {
         this->config = move(config);
@@ -37,21 +65,12 @@ public:
 
         while (!wallhack.isAvailable(config));
 
-        cout << "Detected!" << "\n";
-        cout << "To toggle wallhack go to game and press \"" << config.toggleKeyName << "\"" << "\n";
+        cout << "Detected!" << "\n\n";
 
-        while (wallhack.isAvailable(config)) {
-            try {
-                if(GetKeyState(config.toggleKey) & KEY_PRESSED) {
-                    wallhack.isActive() ? wallhack.disable() : wallhack.enable();
-                }
-            } catch (const std::exception &e) {
-                cout << e.what();
-                break;
-            }
+        cout << "To toggle wallhack go to game and press \"" << config.toggleWallhackKeyName << "\"" << "\n";
+        cout << "To toggle flashing wallhack go to game and press \"" << config.toggleFlashingKeyName << "\"" << "\n";
 
-            Sleep(100);
-        }
+        main();
     }
 };
 

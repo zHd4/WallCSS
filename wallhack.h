@@ -29,6 +29,8 @@ private:
     HANDLE processHandle;
 
     int state;
+    bool flashing = false;
+
     uintptr_t whPtr;
 
     void init(const Config &config) {
@@ -36,7 +38,7 @@ private:
         GetWindowThreadProcessId(handleWindow, &pid);
 
         processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
-        uintptr_t clientBase = getModuleBaseAddress(pid, const_cast<char *>(config.clientLib.c_str()));
+        uintptr_t clientBase = getModuleBaseAddress(const_cast<char *>(config.clientLib.c_str()));
         whPtr = clientBase + config.offset;
 
         setState();
@@ -51,29 +53,25 @@ private:
         WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
     }
 
-    uintptr_t getModuleBaseAddress(DWORD dwProcID, char* szModuleName)
-    {
+    uintptr_t getModuleBaseAddress(char* moduleName) const {
         uintptr_t moduleBaseAddress = 0;
-        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, dwProcID);
+        HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
 
-        if (hSnapshot != INVALID_HANDLE_VALUE)
-        {
+        if (snapshot != INVALID_HANDLE_VALUE) {
             MODULEENTRY32 moduleEntry32;
             moduleEntry32.dwSize = sizeof(MODULEENTRY32);
 
-            if (Module32First(hSnapshot, &moduleEntry32))
-            {
-                do
-                {
-                    if (strcmp(moduleEntry32.szModule, szModuleName) == 0)
+            if (Module32First(snapshot, &moduleEntry32)) {
+                do {
+                    if (strcmp(moduleEntry32.szModule, moduleName) == 0)
                     {
                         moduleBaseAddress = (uintptr_t) moduleEntry32.modBaseAddr;
                         break;
                     }
-                } while (Module32Next(hSnapshot, &moduleEntry32));
+                } while (Module32Next(snapshot, &moduleEntry32));
             }
 
-            CloseHandle(hSnapshot);
+            CloseHandle(snapshot);
         }
 
         return moduleBaseAddress;
@@ -100,19 +98,23 @@ public:
     }
 
     bool isActive() const {
-        if(state == 2) {
-            return true;
+        return state == ENABLE_WALLHACK;
+    }
+
+    bool isFlashing() const {
+        return flashing;
+    }
+
+    void toggle() {
+        changeDrawMode(state == ENABLE_WALLHACK ? DISABLE_WALLHACK : ENABLE_WALLHACK, &state);
+    }
+
+    void toggleFlashing() {
+        flashing = !flashing;
+
+        if(state == ENABLE_WALLHACK) {
+            toggle();
         }
-
-        return false;
-    }
-
-    void enable() {
-        changeDrawMode(ENABLE_WALLHACK, &state);
-    }
-
-    void disable() {
-        changeDrawMode(DISABLE_WALLHACK, &state);
     }
 };
 
