@@ -28,10 +28,10 @@ private:
     HWND handleWindow;
     HANDLE processHandle;
 
-    int state;
     bool flashing = false;
+    short state = DISABLE_WALLHACK;
 
-    uintptr_t whPtr;
+    uintptr_t wallhackAddress;
 
     void init(const Config &config) {
         handleWindow = FindWindowA(nullptr, config.window.c_str());
@@ -39,18 +39,18 @@ private:
 
         processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
         uintptr_t clientBase = getModuleBaseAddress(const_cast<char *>(config.clientLib.c_str()));
-        whPtr = clientBase + config.offset;
+        wallhackAddress = clientBase + config.offset;
 
         setState();
     }
 
     void setState() {
-        ReadProcessMemory(processHandle, (void*) whPtr, &state, sizeof(state), nullptr);
+        ReadProcessMemory(processHandle, (void*) wallhackAddress, &state, sizeof(state), nullptr);
     }
 
-    void changeDrawMode(int mode, int* stateVar) {
-        *stateVar = mode;
-        WriteProcessMemory(processHandle, (LPVOID) whPtr, &mode, sizeof(mode), nullptr);
+    void changeDrawMode(short mode, short* statePtr) {
+        *statePtr = mode;
+        WriteProcessMemory(processHandle, (LPVOID) wallhackAddress, &mode, sizeof(mode), nullptr);
     }
 
     uintptr_t getModuleBaseAddress(char* moduleName) const {
