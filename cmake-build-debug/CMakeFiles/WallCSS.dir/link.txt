@@ -1,3 +1,0 @@
-"C:\Users\yevhe\Clion\CLion 2020.2\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\WallCSS.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\WallCSS.dir/objects.a @CMakeFiles\WallCSS.dir\objects1.rsp
-C:\MinGW\bin\g++.exe  -static-libstdc++ -static-libgcc -g   -Wl,--whole-archive CMakeFiles\WallCSS.dir/objects.a -Wl,--no-whole-archive  -o WallCSS.exe -Wl,--out-implib,libWallCSS.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\WallCSS.dir\linklibs.rsp
