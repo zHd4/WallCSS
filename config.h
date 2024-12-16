@@ -9,9 +9,6 @@
 #ifndef WALLCSS_CONFIG_H
 #define WALLCSS_CONFIG_H
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wwritable-strings"
-
 using namespace std;
 
 class Config {
