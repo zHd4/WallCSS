@@ -2,10 +2,6 @@
 // Created by zHd4 on 04.08.2020.
 //
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
-
 #ifndef WALLCSS_UI_H
 #define WALLCSS_UI_H
 
