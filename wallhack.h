@@ -3,10 +3,6 @@
 //
 
 #pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
-
 #include "config.h"
 #include <string>
 #include <cstdint>
