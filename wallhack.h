@@ -20,68 +20,39 @@ using namespace std;
 class Wallhack {
 private:
     DWORD pid;
-    HWND handleWindow;
-    HANDLE processHandle;
+    HWND hWindow;
+    HANDLE hProcess;
 
     bool flashing = false;
     short state = DISABLE_WALLHACK;
 
     uintptr_t wallhackAddress;
 
-    void init(const Config &config) {
-        handleWindow = FindWindowA(nullptr, config.window.c_str());
-        GetWindowThreadProcessId(handleWindow, &pid);
+    void setState() {
+        ReadProcessMemory(hProcess, (void*) wallhackAddress, &state, sizeof(state), nullptr);
+    }
 
-        processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
+    void changeDrawMode(short mode, short* statePtr) {
+        *statePtr = mode;
+        WriteProcessMemory(hProcess, (LPVOID) wallhackAddress, &mode, sizeof(mode), nullptr);
+    }
+
+public:
+    explicit Wallhack(const Config &config) {
+        hWindow = FindWindowA(nullptr, config.window.c_str());
+        GetWindowThreadProcessId(hWindow, &pid);
+
+        hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
         wallhackAddress = config.offset;
 
         setState();
     }
 
-    void setState() {
-        ReadProcessMemory(processHandle, (void*) wallhackAddress, &state, sizeof(state), nullptr);
-    }
-
-    void changeDrawMode(short mode, short* statePtr) {
-        *statePtr = mode;
-        WriteProcessMemory(processHandle, (LPVOID) wallhackAddress, &mode, sizeof(mode), nullptr);
-    }
-
-    uintptr_t getModuleBaseAddress(char* moduleName) const {
-        uintptr_t moduleBaseAddress = 0;
-        HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
-
-        if (snapshot != INVALID_HANDLE_VALUE) {
-            MODULEENTRY32 moduleEntry32;
-            moduleEntry32.dwSize = sizeof(MODULEENTRY32);
-
-            if (Module32First(snapshot, &moduleEntry32)) {
-                do {
-                    if (strcmp(moduleEntry32.szModule, moduleName) == 0)
-                    {
-                        moduleBaseAddress = (uintptr_t) moduleEntry32.modBaseAddr;
-                        break;
-                    }
-                } while (Module32Next(snapshot, &moduleEntry32));
-            }
-
-            CloseHandle(snapshot);
-        }
-
-        return moduleBaseAddress;
-    }
-
-public:
-    explicit Wallhack(const Config &config) {
-        init(config);
-    }
-
-    bool isAvailable(const Config &config) {
+    bool isAvailable() {
         try {
-            init(config);
             isActive();
 
-            if(handleWindow != nullptr){
+            if(hWindow != nullptr){
                 return true;
             }
 
