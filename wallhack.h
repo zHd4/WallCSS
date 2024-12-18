@@ -64,7 +64,7 @@ private:
 
             *statePtr = mode;
         } else {
-            cerr << "Error: Cannot unprotect memory. Code: " << GetLastError() << endl;
+            throw MemAccessException("Error: Cannot unprotect memory. Code: " + to_string(GetLastError()));
         }
 
         VirtualProtectEx(hProcess, (LPVOID)wallhackAddress, sizeof(mode), oldProtect, &oldProtect);
