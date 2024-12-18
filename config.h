@@ -15,10 +15,8 @@ class Config {
 public:
     string console = "WallCSS";
     string window = "Counter-Strike Source";
-    string clientLib = "client.dll";
 
-    // Absolute offset is 0x243B0C9C
-    uintptr_t offset = 0x3B0C9C;
+    uintptr_t offset = 0x243B0C9C;
 
     DWORD toggleWallhackKey = VK_INSERT;
     DWORD toggleFlashingKey = VK_HOME;

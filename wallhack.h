@@ -34,8 +34,7 @@ private:
         GetWindowThreadProcessId(handleWindow, &pid);
 
         processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
-        uintptr_t clientBase = getModuleBaseAddress(const_cast<char *>(config.clientLib.c_str()));
-        wallhackAddress = clientBase + config.offset;
+        wallhackAddress = config.offset;
 
         setState();
     }
