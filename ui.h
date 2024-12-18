@@ -25,7 +25,7 @@ private:
     }
 
     void main() {
-        while (wallhack.isAvailable(config)) {
+        while (wallhack.isAvailable()) {
             try {
                 if(isKeyPressed(config.toggleWallhackKey)) {
                     wallhack.toggle();
@@ -59,7 +59,7 @@ public:
 
         cout << "Waiting for \"" << config.window << "\" ..." << "\n";
 
-        while (!wallhack.isAvailable(config));
+        while (!wallhack.isAvailable());
 
         cout << "Detected!" << "\n\n";
 
