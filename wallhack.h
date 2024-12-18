@@ -2,7 +2,6 @@
 // Created by zHd4 on 31.07.2020.
 //
 
-#pragma clang diagnostic push
 #include "config.h"
 #include <string>
 #include <cstdint>
