@@ -2,7 +2,7 @@
 
 MemAccessException::MemAccessException(const string& msg) : message(msg) {}
 
-const char* MemAccessException::what() const noexcept override {
+const char* MemAccessException::what() const noexcept {
     return message.c_str();
 }
 
@@ -55,11 +55,11 @@ bool Wallhack::isAvailable() {
     return false;
 }
 
-bool Wallhack::isActive() const {
+bool Wallhack::isActive() {
     return state == ENABLE_WALLHACK;
 }
 
-bool Wallhack::isFlashing() const {
+bool Wallhack::isFlashing() {
     return flashing;
 }
 
