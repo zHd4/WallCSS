@@ -17,6 +17,18 @@
 
 using namespace std;
 
+class MemAccessException : public std::exception {
+private:
+    string message;
+
+public:
+    explicit MemAccessException(const string& msg) : message(msg) {}
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
 class Wallhack {
 private:
     DWORD pid;
@@ -33,8 +45,29 @@ private:
     }
 
     void changeDrawMode(short mode, short* statePtr) {
-        *statePtr = mode;
-        WriteProcessMemory(hProcess, (LPVOID) wallhackAddress, &mode, sizeof(mode), nullptr);
+        MEMORY_BASIC_INFORMATION mbi;
+
+        if (VirtualQueryEx(hProcess, (LPVOID)wallhackAddress, &mbi, sizeof(mbi)) == 0) {
+            throw MemAccessException("Error: invalid address " + to_string(wallhackAddress) + ". Code: " + to_string(GetLastError()));
+        }
+
+        if (mbi.State != MEM_COMMIT) {
+            throw MemAccessException("Error: memory is not committed");
+        }
+
+        DWORD oldProtect;
+
+        if (VirtualProtectEx(hProcess, (LPVOID)wallhackAddress, sizeof(mode), PAGE_READWRITE, &oldProtect)) {
+            if (!WriteProcessMemory(hProcess, (LPVOID)wallhackAddress, &mode, sizeof(mode), nullptr)) {
+                throw MemAccessException("Error: cannot write value in memory. Code: " + to_string(GetLastError()));
+            }
+
+            *statePtr = mode;
+        } else {
+            cerr << "Error: Cannot unprotect memory. Code: " << GetLastError() << endl;
+        }
+
+        VirtualProtectEx(hProcess, (LPVOID)wallhackAddress, sizeof(mode), oldProtect, &oldProtect);
     }
 
 public:
