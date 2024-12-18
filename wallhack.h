@@ -40,7 +40,7 @@ private:
 
     uintptr_t wallhackAddress;
 
-    void setState() {
+    void setStateFromMemory() {
         ReadProcessMemory(hProcess, (void*) wallhackAddress, &state, sizeof(state), nullptr);
     }
 
@@ -78,21 +78,15 @@ public:
         hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
         wallhackAddress = config.offset;
 
-        setState();
+        setStateFromMemory();
     }
 
     bool isAvailable() {
-        try {
-            isActive();
-
-            if(hWindow != nullptr){
-                return true;
-            }
-
-            return false;
-        } catch (...) {
-            return false;
+        if (hWindow != nullptr) {
+            return true;
         }
+
+        return false;
     }
 
     bool isActive() const {
@@ -108,11 +102,11 @@ public:
     }
 
     void toggleFlashing() {
-        flashing = !flashing;
-
-        if(state == ENABLE_WALLHACK) {
+        if (state == ENABLE_WALLHACK) {
             toggle();
         }
+
+        flashing = !flashing;
     }
 };
 
