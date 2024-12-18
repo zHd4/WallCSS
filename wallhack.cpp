@@ -29,9 +29,8 @@ void Wallhack::changeDrawMode(short mode, short* statePtr) {
         }
 
         *statePtr = mode;
-    }
-    else {
-        throw MemAccessException("Error: Cannot unprotect memory. Code: " + to_string(GetLastError()));
+    } else {
+        throw MemAccessException("Error: cannot unprotect memory. Code: " + to_string(GetLastError()));
     }
 
     VirtualProtectEx(hProcess, (LPVOID)wallhackAddr, sizeof(mode), oldProtect, &oldProtect);
