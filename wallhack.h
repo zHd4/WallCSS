@@ -38,17 +38,17 @@ private:
     bool flashing = false;
     short state = DISABLE_WALLHACK;
 
-    uintptr_t wallhackAddress;
+    uintptr_t wallhackAddr;
 
     void setStateFromMemory() {
-        ReadProcessMemory(hProcess, (void*) wallhackAddress, &state, sizeof(state), nullptr);
+        ReadProcessMemory(hProcess, (void*) wallhackAddr, &state, sizeof(state), nullptr);
     }
 
     void changeDrawMode(short mode, short* statePtr) {
         MEMORY_BASIC_INFORMATION mbi;
 
-        if (VirtualQueryEx(hProcess, (LPVOID)wallhackAddress, &mbi, sizeof(mbi)) == 0) {
-            throw MemAccessException("Error: invalid address " + to_string(wallhackAddress) + ". Code: " + to_string(GetLastError()));
+        if (VirtualQueryEx(hProcess, (LPVOID) wallhackAddr, &mbi, sizeof(mbi)) == 0) {
+            throw MemAccessException("Error: invalid address " + to_string(wallhackAddr) + ". Code: " + to_string(GetLastError()));
         }
 
         if (mbi.State != MEM_COMMIT) {
@@ -57,8 +57,8 @@ private:
 
         DWORD oldProtect;
 
-        if (VirtualProtectEx(hProcess, (LPVOID)wallhackAddress, sizeof(mode), PAGE_READWRITE, &oldProtect)) {
-            if (!WriteProcessMemory(hProcess, (LPVOID)wallhackAddress, &mode, sizeof(mode), nullptr)) {
+        if (VirtualProtectEx(hProcess, (LPVOID) wallhackAddr, sizeof(mode), PAGE_READWRITE, &oldProtect)) {
+            if (!WriteProcessMemory(hProcess, (LPVOID) wallhackAddr, &mode, sizeof(mode), nullptr)) {
                 throw MemAccessException("Error: cannot write value in memory. Code: " + to_string(GetLastError()));
             }
 
@@ -67,7 +67,7 @@ private:
             throw MemAccessException("Error: Cannot unprotect memory. Code: " + to_string(GetLastError()));
         }
 
-        VirtualProtectEx(hProcess, (LPVOID)wallhackAddress, sizeof(mode), oldProtect, &oldProtect);
+        VirtualProtectEx(hProcess, (LPVOID) wallhackAddr, sizeof(mode), oldProtect, &oldProtect);
     }
 
 public:
@@ -76,7 +76,7 @@ public:
         GetWindowThreadProcessId(hWindow, &pid);
 
         hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
-        wallhackAddress = config.offset;
+        wallhackAddr = config.offset;
 
         setStateFromMemory();
     }
