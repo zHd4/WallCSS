@@ -5,6 +5,9 @@
 
 #define KEY_PRESSED 0x8000
 
+#define MAIN_LOOP_DELAY 70
+#define FLASHING_WH_TOGGLING_DELAY 30
+
 using namespace std;
 
 class KeyboardKey {
@@ -50,7 +53,7 @@ void loop() {
 
             if (wallhack.isFlashing()) {
                 wallhack.toggle();
-                Sleep(30);
+                Sleep(FLASHING_WH_TOGGLING_DELAY);
             }
         }
         catch (const std::exception& e) {
@@ -58,7 +61,7 @@ void loop() {
             break;
         }
 
-        Sleep(70);
+        Sleep(MAIN_LOOP_DELAY);
     }
 }
 
