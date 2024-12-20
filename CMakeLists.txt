@@ -4,4 +4,4 @@ project(WallCSS)
 set(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 
-add_executable(WallCSS main.cpp config.h wallhack.h wallhack.cpp)
+add_executable(WallCSS main.cpp wallhack.h wallhack.cpp)
