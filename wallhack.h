@@ -2,7 +2,6 @@
 // Created by zHd4 on 31.07.2020.
 //
 
-#include "config.h"
 #include <string>
 #include <cstdint>
 #include <windows.h>
@@ -16,6 +15,9 @@
 #define DISABLE_WALLHACK 1
 
 using namespace std;
+
+const uintptr_t WH_ADDRESS = 0x243B0C9C;
+
 
 class MemAccessException : public exception {
 private:
@@ -35,13 +37,11 @@ private:
     bool flashing = false;
     short state = DISABLE_WALLHACK;
 
-    uintptr_t wallhackAddress;
-
     void setStateFromMemory();
     void changeDrawMode(short mode, short* statePtr);
 
 public:
-    explicit Wallhack(const Config& config);
+    Wallhack(const string& gameWindowName);
 
     bool isAvailable();
     bool isActive();

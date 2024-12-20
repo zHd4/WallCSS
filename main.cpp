@@ -1,4 +1,3 @@
-#include "config.h"
 #include "wallhack.h"
 #include <iostream>
 #include <string>
@@ -8,8 +7,31 @@
 
 using namespace std;
 
-Config config;
-Wallhack wallhack(config);
+class KeyboardKey {
+private:
+    string name;
+    DWORD value;
+public:
+    KeyboardKey(const string name, const DWORD value) 
+        : name(name), value(value) { }
+
+    string getName() const {
+        return name;
+    }
+
+    DWORD getValue() const {
+        return value;
+    }
+};
+
+const string NAME = "WallCSS";
+const string GAME_WINDOW_NAME = "Counter-Strike Source";
+
+const KeyboardKey TOGGLE_WH_KEY("Insert", VK_INSERT);
+const KeyboardKey TOGGLE_FLASHING_WH_KEY("Home", VK_HOME);
+
+
+Wallhack wallhack(GAME_WINDOW_NAME);
 
 bool isKeyPressed(DWORD key) {
     return GetKeyState(key) & KEY_PRESSED;
@@ -18,11 +40,11 @@ bool isKeyPressed(DWORD key) {
 void loop() {
     while (wallhack.isAvailable()) {
         try {
-            if (isKeyPressed(config.toggleWallhackKey)) {
+            if (isKeyPressed(TOGGLE_WH_KEY.getValue())) {
                 wallhack.toggle();
             }
 
-            if (isKeyPressed(config.toggleFlashingKey)) {
+            if (isKeyPressed(TOGGLE_FLASHING_WH_KEY.getValue())) {
                 wallhack.toggleFlashing();
             }
 
@@ -41,16 +63,16 @@ void loop() {
 }
 
 int main() {
-    SetConsoleTitle(config.console.c_str());
+    SetConsoleTitle(NAME.c_str());
 
-    cout << "Waiting for \"" << config.window << "\" ..." << "\n";
+    cout << "Waiting for \"" << GAME_WINDOW_NAME << "\" ..." << "\n";
 
     while (!wallhack.isAvailable());
 
     cout << "Detected!" << "\n\n";
 
-    cout << "To toggle wallhack go to game and press \"" << config.toggleWallhackKeyName << "\"" << "\n";
-    cout << "To toggle flashing wallhack go to game and press \"" << config.toggleFlashingKeyName << "\"" << "\n";
+    cout << "To toggle wallhack go to game and press \"" << TOGGLE_WH_KEY.getName() << "\"" << "\n";
+    cout << "To toggle flashing wallhack go to game and press \"" << TOGGLE_FLASHING_WH_KEY.getName() << "\"" << "\n";
 
     loop();
 
