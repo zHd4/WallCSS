@@ -55,8 +55,9 @@ void loop() {
                 wallhack.toggle();
                 Sleep(FLASHING_WH_TOGGLING_DELAY);
             }
-        }
-        catch (const std::exception& e) {
+        } catch (const MemAccessException& e) {
+            cout << e.what();
+        } catch (const exception& e) {
             cout << e.what();
             break;
         }
