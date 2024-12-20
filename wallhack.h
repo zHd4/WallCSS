@@ -35,7 +35,7 @@ private:
     bool flashing = false;
     short state = DISABLE_WALLHACK;
 
-    uintptr_t wallhackAddr;
+    uintptr_t wallhackAddress;
 
     void setStateFromMemory();
     void changeDrawMode(short mode, short* statePtr);
