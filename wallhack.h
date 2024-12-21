@@ -38,6 +38,7 @@ private:
     bool flashing = false;
     short state = DISABLE_WALLHACK;
 
+    short getNextState();
     void setStateFromMemory();
     void changeDrawMode(short mode, short* statePtr);
 

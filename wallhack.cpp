@@ -10,6 +10,10 @@ void Wallhack::setStateFromMemory() {
     ReadProcessMemory(hProcess, (void*)WH_ADDRESS, &state, sizeof(state), nullptr);
 }
 
+short Wallhack::getNextState() {
+    return state == ENABLE_WALLHACK ? DISABLE_WALLHACK : ENABLE_WALLHACK;
+}
+
 void Wallhack::changeDrawMode(short mode, short* statePtr) {
     MEMORY_BASIC_INFORMATION mbi;
 
@@ -50,11 +54,7 @@ void Wallhack::init() {
 }
 
 bool Wallhack::isAvailable() {
-    if (hWindow != nullptr) {
-        return true;
-    }
-
-    return false;
+    return hWindow != nullptr;
 }
 
 bool Wallhack::isActive() {
@@ -66,12 +66,12 @@ bool Wallhack::isFlashing() {
 }
 
 void Wallhack::toggle() {
-    changeDrawMode(state == ENABLE_WALLHACK ? DISABLE_WALLHACK : ENABLE_WALLHACK, &state);
+    changeDrawMode(getNextState(), &state);
 }
 
 void Wallhack::toggleFlashing() {
     if (state == ENABLE_WALLHACK) {
-        toggle();
+        changeDrawMode(getNextState(), &state);
     }
 
     flashing = !flashing;
