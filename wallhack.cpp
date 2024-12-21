@@ -36,12 +36,17 @@ void Wallhack::changeDrawMode(short mode, short* statePtr) {
     VirtualProtectEx(hProcess, (LPVOID)WH_ADDRESS, sizeof(mode), oldProtect, &oldProtect);
 }
 
-Wallhack::Wallhack(const string& gameWindowName) {
-    hWindow = FindWindowA(nullptr, gameWindowName.c_str());
-    GetWindowThreadProcessId(hWindow, &pid);
+Wallhack::Wallhack(const string& gameWindowName) : gameWindowName(gameWindowName) {}
 
-    hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
-    setStateFromMemory();
+void Wallhack::init() {
+    hWindow = FindWindowA(nullptr, gameWindowName.c_str());
+
+    if (hWindow != nullptr) {
+        GetWindowThreadProcessId(hWindow, &pid);
+
+        hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, pid);
+        setStateFromMemory();
+    }
 }
 
 bool Wallhack::isAvailable() {

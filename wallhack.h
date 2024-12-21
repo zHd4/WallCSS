@@ -30,6 +30,7 @@ public:
 
 class Wallhack {
 private:
+    string gameWindowName;
     DWORD pid;
     HWND hWindow;
     HANDLE hProcess;
@@ -42,6 +43,8 @@ private:
 
 public:
     Wallhack(const string& gameWindowName);
+
+    void init();
 
     bool isAvailable();
     bool isActive();

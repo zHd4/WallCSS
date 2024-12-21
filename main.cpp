@@ -71,7 +71,7 @@ int main() {
 
     cout << "Waiting for \"" << GAME_WINDOW_NAME << "\" ..." << "\n";
 
-    while (!wallhack.isAvailable());
+    while (!wallhack.isAvailable()) wallhack.init();
 
     cout << "Detected!" << "\n\n";
 
